@@ -100,8 +100,8 @@ export const LTERouterIcon: React.FC<IconProps> = ({ size = 24, ...props }) => (
   </svg>
 );
 
-// Admiral brand logo
-export const AdmiralLogo: React.FC<IconProps> = ({ size = 24, ...props }) => (
+// ICTECH brand logo
+export const ICTECHLogo: React.FC<IconProps> = ({ size = 24, ...props }) => (
   <svg
     width={size}
     height={size}
