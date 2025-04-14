@@ -27,6 +27,8 @@ export const routers = pgTable("routers", {
   tags: text("tags").array(),
   location: text("location"),
   notes: text("notes"),
+  modelImagePath: text("model_image_path"),
+  modelDataPath: text("model_data_path"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -93,6 +95,8 @@ export const insertRouterSchema = createInsertSchema(routers).pick({
   tags: true,
   location: true,
   notes: true,
+  modelImagePath: true,
+  modelDataPath: true,
 });
 
 export const insertBackupSchema = createInsertSchema(backups).pick({
