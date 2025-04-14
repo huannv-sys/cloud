@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, BarChart2, Activity, XCircle } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 
@@ -122,22 +121,14 @@ export function AlertsCard() {
               ⚠️ ALERTS
             </span>
           </div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div 
-                  className="flex items-center text-blue-500 text-sm font-medium cursor-pointer"
-                  onClick={viewAllAlerts}
-                >
-                  ALERTS VIEW
-                  <ExternalLink className="h-4 w-4 ml-1" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs max-w-xs">Nhấp để xem trang cảnh báo với bộ lọc và tìm kiếm nâng cao</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div 
+            className="flex items-center text-blue-500 text-sm font-medium cursor-pointer"
+            onClick={viewAllAlerts}
+            title="Nhấp để xem trang cảnh báo với bộ lọc và tìm kiếm nâng cao"
+          >
+            ALERTS VIEW
+            <ExternalLink className="h-4 w-4 ml-1" />
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-1 max-h-[300px] overflow-y-auto px-0">
@@ -157,53 +148,29 @@ export function AlertsCard() {
                   <div className="text-xs text-gray-500 mt-1">{alert.timestamp}</div>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button 
-                          onClick={() => viewRouterTimeline(alert.routerId)}
-                          className="p-1 rounded-full hover:bg-gray-200"
-                        >
-                          <BarChart2 className="h-4 w-4 text-blue-500" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Xem dòng thời gian của bộ định tuyến</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <button 
+                    onClick={() => viewRouterTimeline(alert.routerId)}
+                    className="p-1 rounded-full hover:bg-gray-200"
+                    title="Xem dòng thời gian của bộ định tuyến"
+                  >
+                    <BarChart2 className="h-4 w-4 text-blue-500" />
+                  </button>
                   
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button 
-                          onClick={() => viewRouterHealth(alert.routerId)}
-                          className="p-1 rounded-full hover:bg-gray-200"
-                        >
-                          <Activity className="h-4 w-4 text-green-500" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Xem tình trạng sức khỏe bộ định tuyến</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <button 
+                    onClick={() => viewRouterHealth(alert.routerId)}
+                    className="p-1 rounded-full hover:bg-gray-200"
+                    title="Xem tình trạng sức khỏe bộ định tuyến"
+                  >
+                    <Activity className="h-4 w-4 text-green-500" />
+                  </button>
                   
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button 
-                          onClick={() => dismissNotification(alert.id)}
-                          className="p-1 rounded-full hover:bg-gray-200"
-                        >
-                          <XCircle className="h-4 w-4 text-gray-500" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Bỏ qua thông báo</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <button 
+                    onClick={() => dismissNotification(alert.id)}
+                    className="p-1 rounded-full hover:bg-gray-200"
+                    title="Bỏ qua thông báo"
+                  >
+                    <XCircle className="h-4 w-4 text-gray-500" />
+                  </button>
                 </div>
               </div>
             </div>

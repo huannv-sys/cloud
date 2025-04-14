@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLocation } from "wouter";
 
 export function MapCard() {
@@ -30,35 +29,19 @@ export function MapCard() {
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <CardTitle>MAP</CardTitle>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div 
-                  className="flex items-center text-blue-500 text-sm font-medium cursor-pointer"
-                  onClick={viewFullMap}
-                >
-                  MAP VIEW
-                  <ExternalLink className="h-4 w-4 ml-1" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs max-w-xs">Nhấp để xem bản đồ lớn với thông tin chi tiết</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div 
+            className="flex items-center text-blue-500 text-sm font-medium cursor-pointer"
+            onClick={viewFullMap}
+            title="Nhấp để xem bản đồ lớn với thông tin chi tiết"
+          >
+            MAP VIEW
+            <ExternalLink className="h-4 w-4 ml-1" />
+          </div>
         </div>
       </CardHeader>
       <CardContent className="p-0 overflow-hidden h-64 relative">
         {/* World Map Background */}
         <div className="w-full h-full bg-blue-50 relative">
-          {/* Simple representation of world map */}
-          <img 
-            src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png" 
-            alt="Map placeholder" 
-            className="opacity-0 absolute"
-            style={{ width: '0', height: '0' }}
-          />
-          
           {/* Simplified World Map (Vector Shape) */}
           <svg
             viewBox="0 0 1000 500"
@@ -109,7 +92,7 @@ export function MapCard() {
               if (router.status === "offline") color = "#F44336"; // offline - red
               
               return (
-                <g key={router.id} className="cursor-pointer">
+                <g key={router.id} className="cursor-pointer" title={router.name}>
                   {/* Outer circle for emphasis */}
                   <circle
                     cx={x}
