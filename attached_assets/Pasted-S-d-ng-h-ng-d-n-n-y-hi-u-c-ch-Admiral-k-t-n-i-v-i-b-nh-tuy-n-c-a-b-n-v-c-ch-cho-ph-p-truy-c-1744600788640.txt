@@ -1,0 +1,27 @@
+Sử dụng hướng dẫn này để hiểu cách Admiral kết nối với bộ định tuyến của bạn và cách cho phép truy cập trong khi vẫn đảm bảo an toàn cho bộ định tuyến.
+
+Đô đốc MikroTik
+MikroTik
+Admiral có thể kết nối với MikroTik của bạn qua Đường hầm SSTP bằng thông tin xác thực được tạo ngẫu nhiên hoặc qua IP Quản lý mà không cần đường hầm. Hướng dẫn này dành cho các thiết bị được kết nối qua đường hầm SSTP. Các thiết bị này kết nối với VPN Concentrator trung tâm trên triển khai của bạn có thể được xác định bằng tên miền như “vpn6.remotewinbox.com” hoặc bằng IP được liên kết với tên miền nếu thiết bị của bạn không được cấu hình DNS.
+
+IP của MikroTik
+Admiral kết nối với MikroTiks qua đường hầm SSTP, do đó IP đường hầm của VPN Concentrator phải được thiết bị của bạn tin cậy. Để tìm IP này, hãy tìm trong IP > Địa chỉ và sao chép tại địa chỉ "Mạng" trên dòng RemoteWinBoxVPN hoặc chạy lệnh sau:
+
+/ip address print
+Và xác định IP trong cột "Mạng" của hàng Kết nối VPN. IP này được sử dụng cho đến khi mạng con cạn kiệt, vì vậy trên các phiên bản chuyên dụng, hầu hết các bộ định tuyến của bạn sẽ có cùng IP Concentrator, nhưng các phiên bản đám mây sẽ thường xuyên có các mạng con và IP mới.
+
+Thông thường nhất, bạn sẽ cần thêm IP này vào ACL trong IP > Dịch vụ. Admiral Platform sử dụng API và Dịch vụ SSH để kết nối với các thiết bị, vì vậy trước tiên hãy đảm bảo rằng cả hai đều được bật để có đầy đủ chức năng. Nhấp đúp vào một dịch vụ và đảm bảo rằng IP mạng từ phía trên nằm trong hộp "Có sẵn từ". Các danh sách này cũng có thể để trống nếu quyền kiểm soát được xử lý ở nơi khác trên tường lửa. Hãy thận trọng khi cập nhật "Có sẵn từ" bằng các lệnh, vì rất dễ vô tình ghi đè lên các IP khác mà bạn có trong danh sách. Lưu ý: hãy cẩn thận - nếu bạn vô tình xóa một IP cần thiết cho quyền truy cập từ xa của mình, bạn có thể thấy mình bị khóa khỏi thiết bị! Bạn cũng có thể sử dụng các phạm vi chung sau:
+
+10.0.0.0/8
+172.16.0.0/12
+192.168.0.0/16
+Một nơi phổ biến khác để kiểm soát quyền truy cập là IP > Tường lửa > Danh sách địa chỉ. Phương pháp này có thể thay đổi rất nhiều tùy thuộc vào cấu hình Tường lửa của bạn, nhưng bạn có thể sử dụng cùng một IP như đã tìm thấy ở trên để có đầy đủ chức năng.
+
+EZ-ConfigIP
+Yêu cầu về IP của dịch vụ EZ-Config của Admiral:
+
+172.27.0.1
+Cổng và dịch vụ MikroTik
+Admiral Platform sử dụng API và Dịch vụ SSH để kết nối với các thiết bị và tự động phát hiện các cổng được các dịch vụ này sử dụng. API-SSL có thể được bật trên các triển khai chuyên dụng. Nếu dịch vụ API hoặc SSL bị tắt, thì bạn sẽ không có đầy đủ chức năng trong bảng điều khiển.
+
+Dịch vụ WINBOX cũng được sử dụng để truy cập từ xa. Nếu bạn đang sử dụng cổng tùy chỉnh tại đây, bạn phải thay đổi cổng này khi thêm thiết bị vào bảng điều khiển của mình. Liên hệ với bộ phận hỗ trợ nếu bạn cần thay đổi cổng WINBOX sau khi thêm thiết bị vào bảng điều khiển của mình. Nếu dịch vụ API hoặc SSL bị vô hiệu hóa, bạn sẽ không có đầy đủ chức năng trong bảng điều khiển.
