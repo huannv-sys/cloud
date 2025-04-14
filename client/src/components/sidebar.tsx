@@ -97,7 +97,7 @@ export function Sidebar({ mobileMenuOpen }: SidebarProps) {
             <path d="M25,25 L75,75" />
             <path d="M25,75 L75,25" />
           </svg>
-          <span className="ml-2 text-xl font-semibold">ADMIRAL</span>
+          <span className="ml-2 text-xl font-semibold">ICTECH</span>
         </div>
       </div>
       
@@ -106,8 +106,8 @@ export function Sidebar({ mobileMenuOpen }: SidebarProps) {
           {navItems.map((item) => (
             <li key={item.href} className="mb-1">
               <Link href={item.href}>
-                <a className={cn(
-                  "flex items-center justify-between py-2 px-4 rounded",
+                <div className={cn(
+                  "flex items-center justify-between py-2 px-4 rounded cursor-pointer",
                   isActive(item.href) 
                     ? "bg-primary-50 text-primary-600" 
                     : "text-gray-700 hover:bg-primary-50 hover:text-primary-600"
@@ -132,7 +132,7 @@ export function Sidebar({ mobileMenuOpen }: SidebarProps) {
                       <path d="m9 18 6-6-6-6"/>
                     </svg>
                   )}
-                </a>
+                </div>
               </Link>
               
               {item.hasSubmenu && isActive(item.href) && (
@@ -140,14 +140,14 @@ export function Sidebar({ mobileMenuOpen }: SidebarProps) {
                   {item.submenu?.map((subItem) => (
                     <li key={subItem.href}>
                       <Link href={subItem.href}>
-                        <a className={cn(
-                          "block py-1 text-sm",
+                        <div className={cn(
+                          "block py-1 text-sm cursor-pointer",
                           location === subItem.href 
                             ? "text-primary-600 font-medium" 
                             : "text-gray-600 hover:text-primary-600"
                         )}>
                           {subItem.label}
-                        </a>
+                        </div>
                       </Link>
                     </li>
                   ))}

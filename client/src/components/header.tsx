@@ -40,7 +40,7 @@ export function Header({ toggleMobileMenu }: HeaderProps) {
             <HelpCircle className="h-5 w-5" />
           </Button>
           <Avatar className="h-8 w-8 bg-gray-300 text-gray-700">
-            <AvatarFallback>AD</AvatarFallback>
+            <AvatarFallback>IC</AvatarFallback>
           </Avatar>
         </div>
       </div>

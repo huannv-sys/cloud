@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export default function Dashboard() {
   useEffect(() => {
-    document.title = "Dashboard | Admiral";
+    document.title = "Dashboard | ICTECH";
   }, []);
   
   return (
