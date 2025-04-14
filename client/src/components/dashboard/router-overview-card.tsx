@@ -46,28 +46,74 @@ export function RouterOverviewCard() {
   const permissionPercent = filters.permission ? (routerStats.permission / totalRouters) * 100 : 0;
   const offlinePercent = filters.offline ? (routerStats.offline / totalRouters) * 100 : 0;
   
-  // SVG path calculation for donut chart
-  const radius = 50;
-  const center = 60;
-  const strokeWidth = 30;
-  
-  // Helper to calculate angles
-  const calculateSegmentAngles = () => {
-    const totalShown = 
+  // Half-donut chart calculations
+  const chartWidth = 120; // SVG width
+  const chartHeight = 120; // SVG height
+  const centerX = chartWidth / 2;
+  const centerY = chartHeight / 2;
+  const radius = 40;
+  const strokeWidth = 20;
+  const innerRadius = radius - strokeWidth / 2;
+
+  // Calculate the angles for each segment
+  const calculateSegments = () => {
+    // The total degrees in the half-circle is 180 (not 360 for a full circle)
+    const totalDegrees = 180;
+    
+    // Calculate the total visible routers
+    const totalVisible = 
       (filters.online ? routerStats.online : 0) + 
       (filters.permission ? routerStats.permission : 0) + 
       (filters.offline ? routerStats.offline : 0);
     
-    const onlineAngle = filters.online ? (routerStats.online / totalShown) * 360 : 0;
-    const permissionAngle = filters.permission ? (routerStats.permission / totalShown) * 360 : 0;
-    const offlineAngle = filters.offline ? (routerStats.offline / totalShown) * 360 : 0;
+    // Calculate the angle each segment should occupy
+    const onlineAngle = filters.online ? (routerStats.online / totalRouters) * totalDegrees : 0;
+    const permissionAngle = filters.permission ? (routerStats.permission / totalRouters) * totalDegrees : 0;
+    const offlineAngle = filters.offline ? (routerStats.offline / totalRouters) * totalDegrees : 0;
     
+    // Calculate the starting and ending angles for each segment
     return {
-      online: { start: 0, end: onlineAngle },
-      permission: { start: onlineAngle, end: onlineAngle + permissionAngle },
-      offline: { start: onlineAngle + permissionAngle, end: 360 }
+      online: {
+        startAngle: 0,
+        endAngle: onlineAngle
+      },
+      permission: {
+        startAngle: onlineAngle,
+        endAngle: onlineAngle + permissionAngle
+      },
+      offline: {
+        startAngle: onlineAngle + permissionAngle,
+        endAngle: onlineAngle + permissionAngle + offlineAngle
+      }
     };
   };
+  
+  // Convert angle to coordinates
+  const polarToCartesian = (angle: number) => {
+    // Convert angle from degrees to radians
+    const radians = (angle - 90) * Math.PI / 180;
+    return {
+      x: centerX + radius * Math.cos(radians),
+      y: centerY + radius * Math.sin(radians)
+    };
+  };
+  
+  // Generate SVG path for an arc
+  const createArc = (startAngle: number, endAngle: number) => {
+    const start = polarToCartesian(startAngle);
+    const end = polarToCartesian(endAngle);
+    
+    // Determine if the arc is more than 180 degrees
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    
+    // SVG path format for an arc
+    return [
+      `M ${start.x} ${start.y}`,
+      `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`
+    ].join(" ");
+  };
+  
+  const segments = calculateSegments();
   
   return (
     <Card className="relative group">
@@ -83,66 +129,57 @@ export function RouterOverviewCard() {
         </div>
       </CardHeader>
       <CardContent className="flex justify-between items-center">
-        {/* Donut Chart */}
-        <div className="relative w-32 h-32">
-          <svg width="120" height="120" viewBox="0 0 120 120">
-            {/* Online segment (green) */}
-            <circle 
-              cx={center}
-              cy={center}
-              r={radius}
-              fill="transparent"
-              stroke="#4CAF50"
+        {/* D-shaped Donut Chart */}
+        <div className="relative w-32">
+          <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
+            {/* Background line for the half-circle */}
+            <path
+              d={`M ${centerX - radius} ${centerY} A ${radius} ${radius} 0 0 1 ${centerX + radius} ${centerY}`}
+              fill="none"
+              stroke="#e5e5e5"
               strokeWidth={strokeWidth}
-              strokeDasharray={`${onlinePercent * 3.14159 * radius / 100} ${2 * 3.14159 * radius}`}
-              strokeDashoffset="0"
-              transform="rotate(-90, 60, 60)"
-              className="cursor-pointer"
-              onClick={() => navigateToFilteredList('online')}
             />
+            
+            {/* Online segment (green) */}
+            {filters.online && onlinePercent > 0 && (
+              <path
+                d={createArc(0, segments.online.endAngle)}
+                fill="none"
+                stroke="#4CAF50"
+                strokeWidth={strokeWidth}
+                className="cursor-pointer"
+                onClick={() => navigateToFilteredList('online')}
+              />
+            )}
             
             {/* Permission issue segment (orange) */}
-            <circle 
-              cx={center}
-              cy={center}
-              r={radius}
-              fill="transparent"
-              stroke="#FF9800"
-              strokeWidth={strokeWidth}
-              strokeDasharray={`${permissionPercent * 3.14159 * radius / 100} ${2 * 3.14159 * radius}`}
-              strokeDashoffset={`${-onlinePercent * 3.14159 * radius / 100}`}
-              transform="rotate(-90, 60, 60)"
-              className="cursor-pointer"
-              onClick={() => navigateToFilteredList('permission')}
-            />
+            {filters.permission && permissionPercent > 0 && (
+              <path
+                d={createArc(segments.permission.startAngle, segments.permission.endAngle)}
+                fill="none"
+                stroke="#FF9800"
+                strokeWidth={strokeWidth}
+                className="cursor-pointer"
+                onClick={() => navigateToFilteredList('permission')}
+              />
+            )}
             
             {/* Offline segment (red) */}
-            <circle 
-              cx={center}
-              cy={center}
-              r={radius}
-              fill="transparent"
-              stroke="#F44336"
-              strokeWidth={strokeWidth}
-              strokeDasharray={`${offlinePercent * 3.14159 * radius / 100} ${2 * 3.14159 * radius}`}
-              strokeDashoffset={`${-(onlinePercent + permissionPercent) * 3.14159 * radius / 100}`}
-              transform="rotate(-90, 60, 60)"
-              className="cursor-pointer"
-              onClick={() => navigateToFilteredList('offline')}
-            />
-            
-            {/* Inner white circle for donut effect */}
-            <circle
-              cx={center}
-              cy={center}
-              r={radius - strokeWidth / 2}
-              fill="white"
-            />
+            {filters.offline && offlinePercent > 0 && (
+              <path
+                d={createArc(segments.offline.startAngle, segments.offline.endAngle)}
+                fill="none"
+                stroke="#F44336"
+                strokeWidth={strokeWidth}
+                className="cursor-pointer"
+                onClick={() => navigateToFilteredList('offline')}
+              />
+            )}
             
             {/* Display the total count in the middle */}
             <text 
-              x={center} 
-              y={center} 
+              x={centerX} 
+              y={centerY} 
               fontFamily="Arial" 
               fontSize="20" 
               textAnchor="middle" 
