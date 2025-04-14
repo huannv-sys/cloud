@@ -9,6 +9,10 @@ import {
   insertTagSchema, 
   insertCommandSchema 
 } from "@shared/schema";
+import * as routerModelService from "./router-model-service";
+import multer from "multer";
+import * as fs from "fs";
+import * as path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -358,6 +362,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(meshLab);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching mesh lab' });
+    }
+  });
+
+  // Configure multer storage for file uploads
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        const modelName = req.params.model || 'default';
+        const modelPath = path.join(process.cwd(), 'public', 'router-models', modelName);
+        
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(modelPath)) {
+          fs.mkdirSync(modelPath, { recursive: true });
+        }
+        
+        cb(null, modelPath);
+      },
+      filename: (req, file, cb) => {
+        // Keep original filename for VSDX files
+        cb(null, file.originalname);
+      }
+    }),
+    limits: {
+      fileSize: 20 * 1024 * 1024 // 20MB limit
+    }
+  });
+
+  // Router model API endpoints
+  app.get('/api/router-models', async (req: Request, res: Response) => {
+    try {
+      const models = routerModelService.getAvailableModels();
+      res.json(models);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching router models' });
+    }
+  });
+  
+  app.get('/api/routers/:id/model', async (req: Request, res: Response) => {
+    try {
+      const routerId = parseInt(req.params.id);
+      const router = await storage.getRouter(routerId);
+      
+      if (!router) {
+        return res.status(404).json({ message: 'Router not found' });
+      }
+      
+      const modelInfo = routerModelService.getRouterModelInfo(router);
+      
+      res.json(modelInfo || { message: 'No model information available' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching router model' });
+    }
+  });
+  
+  app.post('/api/router-models/:model/upload', upload.single('modelFile'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+      
+      const modelName = req.params.model;
+      const file = req.file;
+      
+      // Get the relative path to the uploaded file
+      const filePath = `/router-models/${modelName}/${file.filename}`;
+      
+      res.json({
+        modelName,
+        filePath,
+        originalName: file.originalname,
+        size: file.size,
+        message: 'File uploaded successfully'
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Error uploading model file' });
+    }
+  });
+  
+  app.post('/api/routers/:id/model', async (req: Request, res: Response) => {
+    try {
+      const routerId = parseInt(req.params.id);
+      const router = await storage.getRouter(routerId);
+      
+      if (!router) {
+        return res.status(404).json({ message: 'Router not found' });
+      }
+      
+      const { modelImagePath, modelDataPath } = req.body;
+      
+      // Update router with model information
+      const updatedRouter = await storage.updateRouter(routerId, {
+        modelImagePath,
+        modelDataPath
+      });
+      
+      res.json(updatedRouter);
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating router model' });
     }
   });
 
