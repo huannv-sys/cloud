@@ -16,7 +16,7 @@ export default function RouterHealth() {
   const { toast } = useToast();
   
   useEffect(() => {
-    document.title = "Router Health | Admiral";
+    document.title = "Router Health | ICTECH";
   }, []);
   
   const { data: routers, isLoading: routersLoading } = useQuery({

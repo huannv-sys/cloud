@@ -28,64 +28,143 @@ export function TransferCard() {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle>Transfer Stats</CardTitle>
+        <CardTitle>Traffic</CardTitle>
       </CardHeader>
-      <CardContent>
-        {/* Traffic Graph */}
-        <div className="h-40 relative bg-white">
-          <div className="absolute inset-0 grid grid-cols-24 grid-rows-6">
-            {/* Y-axis labels */}
-            <div className="absolute top-0 left-0 h-full flex flex-col justify-between text-xs text-gray-500 pr-2">
-              <span>50</span>
-              <span>40</span>
-              <span>30</span>
-              <span>20</span>
-              <span>10</span>
-              <span>0</span>
-            </div>
-            
+      <CardContent className="p-0">
+        <div className="text-sm px-4 py-2 font-medium">DOWNLOAD</div>
+        {/* Download Traffic Graph */}
+        <div className="h-40 relative px-4">
+          <div className="flex items-start justify-between text-xs text-gray-500 mb-1">
+            <div>150</div>
+            <div>100</div>
+            <div>50</div>
+            <div>0</div>
+          </div>
+          <div className="flex flex-col justify-between h-full border-b border-gray-200">
             {/* Grid lines */}
-            <div className="absolute left-6 right-0 top-0 bottom-0">
-              <div className="grid grid-rows-6 h-full">
-                <div className="border-t border-gray-200"></div>
-                <div className="border-t border-gray-200"></div>
-                <div className="border-t border-gray-200"></div>
-                <div className="border-t border-gray-200"></div>
-                <div className="border-t border-gray-200"></div>
-                <div className="border-t border-gray-200"></div>
-              </div>
+            <div className="grid grid-rows-3 h-full">
+              <div className="border-t border-gray-200"></div>
+              <div className="border-t border-gray-200"></div>
+              <div className="border-t border-gray-200"></div>
             </div>
             
-            {/* Data area */}
-            <div className="absolute left-6 right-0 top-0 bottom-0 pl-2">
-              {/* Blue bar chart */}
-              <svg className="w-full h-full" preserveAspectRatio="none">
-                <path 
-                  d="M0,120 L10,70 L20,30 L30,40 L40,80 L50,90 L60,70 L70,70 L80,100 L90,70 L100,40 L110,50 L120,90 L130,100 L140,70 L150,40 L160,50 L170,90 L180,100 L190,110 L200,120 L210,120 L220,120 L230,120 L240,120 L250,120 L260,120 L270,120 L280,120 L290,120 L300,120 L310,120 L320,120 L330,120 L340,120 L350,120 L360,120 L370,120 L380,120 L390,120 L400,120 L400,120 L0,120 Z"
-                  fill="#2196f3" 
-                  opacity="0.8"
-                />
-                <path 
-                  d="M0,120 L10,100 L20,110 L30,100 L40,120 L50,110 L60,120 L70,100 L80,120 L90,110 L100,100 L110,120 L120,110 L130,120 L140,110 L150,100 L160,120 L170,110 L180,120 L190,120 L200,120 L210,120 L220,120 L230,120 L240,120 L250,120 L260,120 L270,120 L280,120 L290,120 L300,120 L310,120 L320,120 L330,120 L340,120 L350,120 L360,120 L370,120 L380,120 L390,120 L400,120 L400,120 L0,120 Z"
-                  fill="#f48fb1" 
-                  opacity="0.6"
-                />
-              </svg>
+            {/* Time labels */}
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <div>2PM</div>
+              <div>5PM</div>
+              <div>9PM</div>
+              <div>Jul 5</div>
+              <div>4AM</div>
+              <div>7AM</div>
+              <div>11AM</div>
             </div>
+          </div>
+          
+          {/* Download chart */}
+          <div className="absolute left-4 right-4 top-4 bottom-6">
+            {/* Multicolor line chart */}
+            <svg className="w-full h-full" preserveAspectRatio="none">
+              {/* Yellow line */}
+              <path 
+                d="M0,60 L20,55 L40,59 L60,58 L80,60 L100,57 L120,56 L140,58 L160,59 L180,60 L200,60 L220,59 L240,58 L260,57 L280,58 L300,59 L320,60"
+                stroke="#F9A825"
+                strokeWidth="1.5"
+                fill="none"
+              />
+              
+              {/* Green line */}
+              <path 
+                d="M0,65 L20,64 L40,62 L60,61 L80,63 L100,64 L120,65 L140,63 L160,62 L180,64 L200,65 L220,63 L240,64 L260,65 L280,64 L300,63 L320,65"
+                stroke="#66BB6A"
+                strokeWidth="1.5"
+                fill="none"
+              />
+              
+              {/* Blue line */}
+              <path 
+                d="M0,50 L20,52 L40,48 L60,45 L80,47 L100,50 L120,48 L140,46 L160,49 L180,50 L200,48 L220,45 L240,47 L260,50 L280,48 L300,49 L320,50"
+                stroke="#29B6F6"
+                strokeWidth="1.5"
+                fill="none"
+              />
+            </svg>
           </div>
         </div>
         
-        {/* Legend */}
-        <div className="mt-4 flex items-center justify-start space-x-4 text-xs">
-          {transferStats?.devices.map((device, index) => (
-            <div key={index} className="flex items-center">
-              <span 
-                className="w-3 h-3 rounded-sm mr-1" 
-                style={{ backgroundColor: device.color }}
-              />
-              <span>{device.name}</span>
+        {/* Legend for download */}
+        <div className="text-xs flex flex-wrap gap-2 mb-4 px-4">
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-blue-400 mr-1 rounded-sm"></span>
+            <span>sfp-sfpplus4</span>
+          </div>
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-green-500 mr-1 rounded-sm"></span>
+            <span>sfp-sfpplus2</span>
+          </div>
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-pink-300 mr-1 rounded-sm"></span>
+            <span>ether8</span>
+          </div>
+          {/* Add more legend items as seen in the screenshot */}
+        </div>
+        
+        <div className="text-sm px-4 py-2 font-medium">UPLOAD</div>
+        {/* Upload Traffic Graph */}
+        <div className="h-40 relative px-4">
+          <div className="flex items-start justify-between text-xs text-gray-500 mb-1">
+            <div>150</div>
+            <div>100</div>
+            <div>50</div>
+            <div>0</div>
+          </div>
+          <div className="flex flex-col justify-between h-full border-b border-gray-200">
+            {/* Grid lines */}
+            <div className="grid grid-rows-3 h-full">
+              <div className="border-t border-gray-200"></div>
+              <div className="border-t border-gray-200"></div>
+              <div className="border-t border-gray-200"></div>
             </div>
-          ))}
+            
+            {/* Time labels */}
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <div>2PM</div>
+              <div>5PM</div>
+              <div>9PM</div>
+              <div>Jul 5</div>
+              <div>4AM</div>
+              <div>7AM</div>
+              <div>11AM</div>
+            </div>
+          </div>
+          
+          {/* Upload chart */}
+          <div className="absolute left-4 right-4 top-4 bottom-6">
+            {/* Multicolor line chart */}
+            <svg className="w-full h-full" preserveAspectRatio="none">
+              {/* Light blue line */}
+              <path 
+                d="M0,75 L20,73 L40,72 L60,73 L80,74 L100,75 L120,73 L140,72 L160,73 L180,74 L200,75 L220,74 L240,73 L260,72 L280,74 L300,75 L320,74"
+                stroke="#29B6F6"
+                strokeWidth="2"
+                fill="none"
+              />
+              
+              {/* Additional upload lines could be added here */}
+            </svg>
+          </div>
+        </div>
+        
+        {/* Legend for upload */}
+        <div className="text-xs flex flex-wrap gap-2 mb-2 px-4">
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-blue-400 mr-1 rounded-sm"></span>
+            <span>sfp-sfpplus4</span>
+          </div>
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-green-500 mr-1 rounded-sm"></span>
+            <span>sfp-sfpplus2</span>
+          </div>
+          {/* Add more legend items as seen in the screenshot */}
         </div>
       </CardContent>
       <CardFooter className="bg-gray-50 rounded-b-lg p-4">

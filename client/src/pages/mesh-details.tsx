@@ -14,7 +14,7 @@ export default function MeshDetails() {
   const { toast } = useToast();
   
   useEffect(() => {
-    document.title = "Mesh Details | Admiral";
+    document.title = "Mesh Details | ICTECH";
   }, []);
   
   const { data: meshLab, isLoading, error } = useQuery({

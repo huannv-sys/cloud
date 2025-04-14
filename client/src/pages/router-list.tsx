@@ -25,7 +25,7 @@ export default function RouterListPage() {
   const queryClient = useQueryClient();
   
   useEffect(() => {
-    document.title = "Router List | Admiral";
+    document.title = "Router List | ICTECH";
   }, []);
   
   const handleTabChange = (tab: string) => {
@@ -76,8 +76,7 @@ export default function RouterListPage() {
       queryClient.invalidateQueries({ queryKey: ['/api/routers'] });
       toast({
         title: "Router added",
-        description: "The router has been added successfully.",
-        variant: "success"
+        description: "The router has been added successfully."
       });
     },
     onError: (error) => {
@@ -293,8 +292,7 @@ export default function RouterListPage() {
                 setEzConfigDialogOpen(false);
                 toast({
                   title: "Configuration applied",
-                  description: "The EZ Config has been applied to the selected router.",
-                  variant: "success"
+                  description: "The EZ Config has been applied to the selected router."
                 });
               }}
             >
